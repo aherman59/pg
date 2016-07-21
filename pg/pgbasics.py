@@ -605,7 +605,7 @@ class PgConn():
             self.connection.set_client_encoding(client_encoding)            
             self.conn_actif = True            
         except Exception as e:
-            print('Connexion impossible')
+            print('Connexion impossible : ', str(e))
             self.conn_actif = False
 
         
@@ -617,7 +617,7 @@ class PgConn():
             self.connection.close()
             self.conn_actif = False
         except Exception as e:
-            pass
+            print('Problème de déconnexion : ',  str(e))
         
 
     def execute_commit(self, sql):
@@ -647,7 +647,7 @@ class PgConn():
     
     def execute_many(self, sql, donnees):
         '''
-        Execute la requete sql et la soumet au serveur pour chacun des éléments de la liste donnees, 
+        Execute la requete sql et la soumet au serveur pour chacun des éléments de la liste de tuple donnees, 
         Renvoie également le nombre de lignes modifiés en fonction du type de requete.
         '''
         nb_ligne_affectee = -1
