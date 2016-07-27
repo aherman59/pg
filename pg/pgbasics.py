@@ -1,5 +1,5 @@
 '''
-@author: antoine.herman
+@author  : Antoine HERMAN
 '''
 
 import psycopg2
@@ -186,20 +186,23 @@ class PgOutils():
         Se déconnecte
         Renvoie le résultat de la requete sous forme d'une liste de tuple
         '''
+        resultat = None
         reussite = False
         tentative = 1
         while(tentative <= max_tentative and not reussite):
             try:
                 resultat = self.pgconn.execute_recupere(sql)
                 self.redaction_script(self.script, sql, False)                
-                print(sql)                
-                reussite = True                
+                print(sql)
+                reussite = True                                
             except Exception as e:
                 print(e)                
                 print('Tentative ' + str(tentative) + ' échouée...')
                 if tentative == max_tentative:
                     print('REQUETE EN ECHEC : ')
                     print(sql)
+                    self.redaction_script(self.script, 'REQUETE EN ECHEC : ', False)
+                    self.redaction_script(self.script, sql, False)
                     #sys.exit('FIN PREMATUREE - TRAITEMENT NON ABOUTI')
                 tentative += 1
         return resultat
@@ -226,7 +229,9 @@ class PgOutils():
                 print('Tentative ' + str(tentative) + ' échouée...')
                 if tentative == max_tentative:
                     print('REQUETE EN ECHEC : ')
-                    print(sql)  
+                    print(sql)
+                    self.redaction_script(self.script, 'REQUETE EN ECHEC : ', False)
+                    self.redaction_script(self.script, sql, False)  
                     #sys.exit('FIN PREMATUREE - TRAITEMENT NON ABOUTI')
                 tentative += 1
         return reussite, nb_lignes_modifiees

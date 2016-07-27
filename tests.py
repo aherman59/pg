@@ -9,7 +9,7 @@ from pg.pgbasics import *
 hote = 'localhost'
 bdd = 'test_pg'
 utilisateur = 'postgres'
-mdp = 'postgres'
+mdp = 'cerema59'
 port = '5432'
 
 class TestPgConn(unittest.TestCase):
@@ -43,7 +43,7 @@ class TestPgConn(unittest.TestCase):
         self.assertFalse(pgconn.conn_actif)
         
     def test_conn_actif_est_False_si_parametres_incorrects(self):
-        pgconn = PgConn(hote, bdd, port, utilisateur, 'vdsgvsgv')
+        pgconn = PgConn(hote, bdd, port, 'bgfxnnfhs', 'vdsgvsgv')
         self.assertEqual(pgconn.connection, None)
         self.assertFalse(pgconn.conn_actif)
     
@@ -127,7 +127,20 @@ class TestPGOutils(unittest.TestCase):
         self.pgoutils = PgOutils(hote, bdd, port, utilisateur, mdp)
 
     def tearDown(self):
-        self.pgoutils.deconnecter()     
+        self.pgoutils.deconnecter()
+        
+    def test_execution_renvoie_False_moins1_en_cas_echec_requete(self):
+        reussite, nb = self.pgoutils.execution('''CREATE TABLE ERREUR DE FRAPPE test(id serial);''')
+        self.assertFalse(reussite)
+        self.assertEqual(nb, -1)
+    
+    def test_execution_renvoie_True_en_cas_reussite_requete(self):
+        reussite, nb = self.pgoutils.execution('''CREATE TABLE test(id serial);''')
+        self.assertTrue(reussite)
+        self.assertEqual(nb, -1)
+        reussite, nb = self.pgoutils.execution('''DROP TABLE test;''')
+        self.assertTrue(reussite)
+        self.assertEqual(nb, -1)      
 
     def test_lister_schemas_renvoie_la_liste_des_schemas(self):
         schemas = self.pgoutils.lister_schemas()
