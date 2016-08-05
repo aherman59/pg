@@ -9,7 +9,7 @@ from pg.pgbasics import *
 hote = 'localhost'
 bdd = 'test_pg'
 utilisateur = 'postgres'
-mdp = 'cerema59'
+mdp = 'postgres'
 port = '5432'
 
 class TestPgConn(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestPgConn(unittest.TestCase):
     
     @classmethod
     def tearDownClass(cls):
-        os.system('''psql -h {0} -p {1} -U {2} -c "DROP DATABASE {3};"'''.format(hote, port, utilisateur, bdd))
+        os.system('''psql -h {0} -p {1} -U {2} -c "DROP DATABASE {3};"'''.format(hote, port, utilisateur, bdd))        
     
     def test_une_nouvelle_instance_de_pg_conn_se_connecte_automatiquement_a_la_base(self):
         pgconn = PgConn(hote, bdd, port, utilisateur, mdp)
@@ -121,13 +121,35 @@ class TestPGOutils(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.system('''psql -h {0} -p {1} -U {2} -c "DROP DATABASE {3};"'''.format(hote, port, utilisateur, bdd))
-
+        if os.path.exists('test.sql'):
+            os.remove('test.sql')
 
     def setUp(self):
-        self.pgoutils = PgOutils(hote, bdd, port, utilisateur, mdp)
+        self.pgoutils = PgOutils(hote, bdd, port, utilisateur, mdp, script='test.sql')
 
     def tearDown(self):
         self.pgoutils.deconnecter()
+    
+    def test_redaction_script_ecrit_bien_dans_fichier_et_efface_selon_valeur_effacement(self):
+        self.pgoutils.redaction_script(self.pgoutils.script, 'Ceci est un test', effacement = True)
+        with open(self.pgoutils.script, encoding='utf-8') as f:
+            self.assertTrue('Ceci est un test' in f.read())
+        self.pgoutils.redaction_script(self.pgoutils.script, 'Pas efface', effacement = False)
+        with open(self.pgoutils.script, encoding='utf-8') as f:
+            script = f.read()
+            self.assertTrue('Ceci est un test' in script)
+            self.assertTrue('Pas efface' in script)
+        self.pgoutils.redaction_script(self.pgoutils.script, 'Effacement', effacement = True)
+        with open(self.pgoutils.script, encoding='utf-8') as f:
+            script = f.read()
+            self.assertFalse('Ceci est un test' in script)
+            self.assertFalse('Pas efface' in script)
+            self.assertTrue('Effacement' in script)
+         
+    def test_start_script_affiche_bien_le_debut_dexecution(self):
+        self.pgoutils.start_script()
+        with open('test.sql', encoding='utf-8') as f:
+            self.assertTrue('Début d\'exécution' in f.read())
         
     def test_execution_renvoie_False_moins1_en_cas_echec_requete(self):
         reussite, nb = self.pgoutils.execution('''CREATE TABLE ERREUR DE FRAPPE test(id serial);''')
@@ -140,7 +162,30 @@ class TestPGOutils(unittest.TestCase):
         self.assertEqual(nb, -1)
         reussite, nb = self.pgoutils.execution('''DROP TABLE test;''')
         self.assertTrue(reussite)
-        self.assertEqual(nb, -1)      
+        self.assertEqual(nb, -1)
+    
+    def test_execution_et_ecriture_script_renvoie_False_moins1_en_cas_echec_requete(self):
+        reussite, nb = self.pgoutils.execution_et_ecriture_script('''CREATE TABLE ERREUR DE FRAPPE test(id serial);''')
+        self.assertFalse(reussite)
+        self.assertEqual(nb, -1)
+    
+    def test_execution_et_ecriture_script_renvoie_True_en_cas_reussite_requete(self):
+        reussite, nb = self.pgoutils.execution_et_ecriture_script('''CREATE TABLE test(id serial);''')
+        self.assertTrue(reussite)
+        self.assertEqual(nb, -1)
+        reussite, nb = self.pgoutils.execution_et_ecriture_script('''DROP TABLE test;''')
+        self.assertTrue(reussite)
+        self.assertEqual(nb, -1)
+    
+    def test_execution_et_recuperation_renvoie_None_en_cas_echec(self):
+        resultat = self.pgoutils.execution_et_recuperation('''SELECT * FROM table_inexistante''')
+        self.assertEqual(resultat, None)
+        
+    def test_execution_et_recuperation_renvoie_une_liste_de_tuple_en_cas_de_reussite(self):
+        resultat = self.pgoutils.execution_et_recuperation('''SELECT * FROM pg_tables LIMIT 10;''')
+        self.assertEqual(type(resultat), type(list()))
+        for ligne in resultat:
+            self.assertEqual(type(ligne), type(tuple()))      
 
     def test_lister_schemas_renvoie_la_liste_des_schemas(self):
         schemas = self.pgoutils.lister_schemas()

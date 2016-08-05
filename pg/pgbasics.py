@@ -92,7 +92,7 @@ class PgOutils():
         '''
         Constructeur
         Se connecte directement à la base de données
-        Toutes les requêtes exécutées à partir de l'objet instancié sont écrites dans le fichier script.
+        Les requêtes exécutées à partir de l'objet instancié sont écrites dans le fichier script.
         '''
         self.pgconn = PgConn(hote, base, port, utilisateur, motdepasse)
         self.script = script
@@ -135,6 +135,7 @@ class PgOutils():
         Tente l'execution d'une requete sql (3 fois par défaut)
         Se déconnecte
         Renvoie True si la requete a réussi ainsi que le nombre de lignes modifiées ou renvoyées en fonction du type de requête
+        La requete sql n'est pas écrite dans le fichier script défini.
         '''
         reussite = False
         nb_lignes_modifiees = -1 
@@ -160,6 +161,7 @@ class PgOutils():
         Tente l'execution d'une requete multiple sql (3 fois par défaut)
         Se déconnecte
         Renvoie True si la requete a réussi ainsi que le nombre de lignes modifiées ou renvoyées en fonction du type de requête
+        La requete sql n'est pas écrite dans le fichier script défini.
         '''
         reussite = False
         nb_lignes_modifiees = -1 
@@ -184,7 +186,8 @@ class PgOutils():
         Se connecte
         Tente l'execution d'une requete sql (3 fois par défaut)
         Se déconnecte
-        Renvoie le résultat de la requete sous forme d'une liste de tuple
+        Ecrit la requete correspondante dans le fichier script défini
+        Renvoie le résultat de la requete sous forme d'une liste de tuple ou None en cas d'échec
         '''
         resultat = None
         reussite = False
@@ -213,7 +216,8 @@ class PgOutils():
         Tente l'execution d'une requete sql (3 fois par défaut)
         Se déconnecte
         Ecrit la requete correspondante dans le fichier script défini
-        Renvoie True si la requete a réussi ainsi que le nombre de lignes modifiées ou renvoyées en fonction du type de requête
+        Renvoie True si la requete a réussi ainsi que le nombre de lignes modifiées 
+        ou renvoyées en fonction du type de requête
         '''
         reussite = False
         nb_lignes_modifiees = -1 
