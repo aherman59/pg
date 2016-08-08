@@ -51,14 +51,18 @@ def select_sql_champ_unique(fonction):
     def interne(self, *args, **kwargs):
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        return [r[0] for r in resultat] 
+        if resultat:
+            return [r[0] for r in resultat]
+        return None
     return interne
 
 def select_sql_valeur_unique(fonction):    
     def interne(self, *args, **kwargs):
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        return resultat[0][0] 
+        if resultat:
+            return resultat[0][0]
+        return None 
     return interne
 
 '''
