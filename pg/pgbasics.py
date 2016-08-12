@@ -36,7 +36,9 @@ def select_sql(fonction):
     def interne(self, *args, **kwargs):
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        return resultat
+        if resultat is not None:
+            return resultat if len(resultat) > 0 else []
+        return None
     return interne
 
 def select_sql_avec_modification_args(fonction):    
@@ -44,15 +46,17 @@ def select_sql_avec_modification_args(fonction):
         args = fonction(self, *args, **kwargs)        
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        return resultat
+        if resultat is not None:
+            return resultat if len(resultat) > 0 else []
+        return None
     return interne
 
 def select_sql_champ_unique(fonction):    
     def interne(self, *args, **kwargs):
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        if resultat:
-            return [r[0] for r in resultat]
+        if resultat is not None:   
+            return [r[0] for r in resultat] if len(resultat) > 0 else []
         return None
     return interne
 
@@ -60,8 +64,8 @@ def select_sql_valeur_unique(fonction):
     def interne(self, *args, **kwargs):
         requete = self.requete_sql[fonction.__name__.upper()].format(*args)
         resultat = self.execution_et_recuperation(requete)
-        if resultat:
-            return resultat[0][0]
+        if resultat is not None:
+            return resultat[0][0] if len(resultat) > 0 else []
         return None 
     return interne
 

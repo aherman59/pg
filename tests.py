@@ -252,12 +252,7 @@ class TestPGOutils(unittest.TestCase):
         schemas = []
         reussite, nb = self.pgoutils.effacer_schemas(schemas)
         self.assertTrue(reussite)
-        self.assertEqual(nb, 0)
-        
-        
-        
-    
-        
+        self.assertEqual(nb, 0)       
 
 
 if __name__ == "__main__":
