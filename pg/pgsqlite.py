@@ -16,8 +16,7 @@ class SqliteConn():
         
         Par défaut, se connecte directement à la base. Pour ne pas se connecter directement, mettre connection_directe à False.
         '''
-        self.connection = None      
-        
+        self.connection = None
         self.conn_actif = False
         
         self.nom_bdd = nom_bdd

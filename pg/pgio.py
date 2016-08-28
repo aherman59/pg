@@ -113,50 +113,58 @@ class PgExport(PgOutils):
     Classe permettant d'exporter des tables PostgreSQL sous d'autres formats (sqlite, csv, etc.)
     '''
     
-    def __init__(self, hote, base, port, utilisateur, motdepasse):
-        super().__init__(hote, base, port, utilisateur, motdepasse)
+    VUE_TEMPORAIRE = 'public.temporaire'
     
-    def _recuperer_donnees_table_pg(self, schema, table):
+    def __init__(self, hote, base, port, utilisateur, motdepasse):
+        super().__init__(hote, base, port, utilisateur, motdepasse) 
+    
+    def _creer_vue_temporaire(self, select_sql):
+        '''
+        Crée une vue temporaire avec la requête SELECT spécifiée
+        '''
+        requete_vue = '''DROP VIEW IF EXISTS {1};
+        CREATE VIEW {1} AS {0}'''.format(select_sql, self.VUE_TEMPORAIRE)
+        return self.execution(requete_vue)
+    
+    def _recuperer_donnees_table_pg(self, schema, table, limit = None):
         '''
         Renvoie les données de la table PostgreSQL spécifiée dans une liste de tuples
         '''
-        select = 'SELECT * FROM {0}.{1};'.format(schema, table)
+        if limit is None:
+            select = 'SELECT * FROM {0}.{1};'.format(schema, table)
+        else:
+            select = 'SELECT * FROM {0}.{1} LIMIT {2};'.format(schema, table, limit)
         return self.execution_et_recuperation(select)
-    
-    def _recuperer_donnees_requete_pg(self, sql):
-        '''
-        Renvoie les données de la requête PostgreSQL spécifiée dans une liste de tuples
-        '''
-        return self.execution_et_recuperation(sql)
-    
+
     '''
     EXPORT SQLITE
     '''
     
-    def exporter_table_vers_sqlite(self, schema, table, nom_bdd_sqlite, nom_table_sqlite, recreer_table = True):
+    def exporter_table_vers_sqlite(self, schema, table, nom_bdd_sqlite, nom_table_sqlite, recreer_table = True, limit = None):
         '''
         Insére des données issues d'une table PostgreSQL dans la table d'une base sqlite
         
         Par défaut, la table sqlite est créée (ou recréée) si elle existe.
         Si recreer_table est False, les données sont insérées à la table sqlite existante.
+        Si une valeur entière n est spécifiée pour limit, seules les n premières lignes de la table sont exportées.   
         '''
         champs = self.lister_champs(schema, table)
         if recreer_table:
             self._creer_table_sqlite(nom_bdd_sqlite, nom_table_sqlite, champs)
-        donnees = self._recuperer_donnees_table_pg(schema, table)
+        donnees = self._recuperer_donnees_table_pg(schema, table, limit)
         self._inserer_donnees_dans_sqlite(donnees, nom_bdd_sqlite, nom_table_sqlite)
     
-    def exporter_requete_vers_sqlite(self, sql, nom_bdd_sqlite, nom_table_sqlite, champs, recreer_table = True):
+    def exporter_requete_vers_sqlite(self, sql, nom_bdd_sqlite, nom_table_sqlite, recreer_table = True, limit = None):
         '''
         Insére des données issues d'une requête dans la table d'une base sqlite
         
         Par défaut, la table sqlite est créée (ou recréée) si elle existe.
         Si recreer_table est False, les données sont insérées à la table sqlite existante.
         '''
-        if recreer_table:
-            self._creer_table_sqlite(nom_bdd_sqlite, nom_table_sqlite, champs)
-        donnees = self._recuperer_donnees_requete_pg(sql)
-        self._inserer_donnees_dans_sqlite(donnees, nom_bdd_sqlite, nom_table_sqlite)        
+        schema, table = self.VUE_TEMPORAIRE.split('.')
+        reussite, nb = self._creer_vue_temporaire(sql)
+        if reussite:
+            self.exporter_table_vers_sqlite(schema, table, nom_bdd_sqlite, nom_table_sqlite, champs, recreer_table, limit)        
     
     def _creer_table_sqlite(self, nom_bdd_sqlite, nom_table_sqlite, champs):
         champs_pour_requete = ', '.join([nom + ' ' + type for position, nom, type in champs]) 
@@ -175,14 +183,16 @@ class PgExport(PgOutils):
     EXPORT CSV
     '''
     
-    def exporter_table_vers_csv(self, schema, table, fichier_csv, delimiteur = '|'):
+    def exporter_table_vers_csv(self, schema, table, fichier_csv, delimiteur = '|', limit = None):
         champs = [nom for position, nom, type in self.lister_champs(schema, table)]
-        donnees = self._recuperer_donnees_table_pg(schema, table)
+        donnees = self._recuperer_donnees_table_pg(schema, table, limit=limit)
         self._ecrire_dans_csv(fichier_csv, champs, donnees, delimiteur)
     
-    def exporter_requete_vers_csv(self, sql, fichier_csv, champs, delimiteur = '|'):
-        donnees = self._recuperer_donnees_requete_pg(sql)
-        self._ecrire_dans_csv(fichier_csv, champs, donnees, delimiteur)
+    def exporter_requete_vers_csv(self, sql, fichier_csv, delimiteur = '|', limit = None):
+        schema, table = self.VUE_TEMPORAIRE.split('.')
+        reussite, nb = self._creer_vue_temporaire(sql)
+        if reussite:
+            self.exporter_table_vers_csv(schema, table, fichier_csv, delimiteur, limit = limit)
         
     def _ecrire_dans_csv(self, fichier_csv, champs, donnees, delimiteur):
         with open(fichier_csv, 'wt',encoding ='utf-8') as fichier:
@@ -195,15 +205,15 @@ class PgExport(PgOutils):
     EXPORT HTML
     '''
                 
-    def exporter_table_vers_html(self, schema, table, fichier_html, support_html = None):
+    def exporter_table_vers_html(self, schema, table, fichier_html, support_html = None, limit = None):
         support = self._definir_support_html(support = support_html)
-        table_html = self._table_pg_vers_table_html(schema, table)
+        table_html = self._table_pg_vers_table_html(schema, table, limit)
         html = support.format(table_html)
         self._ecrire_dans_fichier_html(html, fichier_html)
     
-    def exporter_requete_vers_html(self, sql, fichier_html, support_html = None):
+    def exporter_requete_vers_html(self, sql, fichier_html, support_html = None, limit = None):
         support = self._definir_support_html(support = support_html)
-        table_html = self._requete_vers_table_html(sql)
+        table_html = self._requete_vers_table_html(sql, limit)
         html = support.format(table_html)
         self._ecrire_dans_fichier_html(html, fichier_html)
     
@@ -230,20 +240,22 @@ class PgExport(PgOutils):
             '''
         return support
     
-    def _table_pg_vers_table_html(self, schema, table):
+    def _table_pg_vers_table_html(self, schema, table, limit = None):
         '''
         Renvoie le resultat de la requête sous forme d'un tableau html
         '''
         champs = [nom for position, nom, type in self.lister_champs(schema, table)]
-        donnees = self._recuperer_donnees_table_pg(schema, table)
+        donnees = self._recuperer_donnees_table_pg(schema, table, limit = limit)
         return self._ecrire_tableau_html(champs, donnees)
     
-    def _requete_vers_table_html(self, sql, champs):
+    def _requete_vers_table_html(self, sql, limit = None):
         '''
         Renvoie le resultat de la requête sous forme d'un tableau html
         '''
-        donnees = self._recuperer_donnees_requete_pg(sql)
-        return self._ecrire_tableau_html(champs, donnees)        
+        schema, table = self.VUE_TEMPORAIRE.split('.')
+        reussite, nb = self._creer_vue_temporaire(sql)
+        if reussite:
+            return self._table_pg_vers_table_html(schema, table, limit = limit)        
     
     def _ecrire_tableau_html(self, champs, donnees):
         tableau_html = '<table class = "table table-condensed table-striped">\n'
