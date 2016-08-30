@@ -10,7 +10,7 @@ utilisateur = 'postgres'
 mdp = 'postgres'
 port = '5432'
 
-class TestPGExport(unittest.TestCase):
+class TestPGSave(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -19,8 +19,6 @@ class TestPGExport(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         os.system('''psql -h {0} -p {1} -U {2} -c "DROP DATABASE {3};"'''.format(hote, port, utilisateur, bdd))
-        if os.path.exists('test.sql'):
-            os.remove('test.sql')
     
     def setUp(self):
         self.pgoutils = PgOutils(hote, bdd, port, utilisateur, mdp)
@@ -33,11 +31,57 @@ class TestPGExport(unittest.TestCase):
                                      ('Capone', 'Al', 50)])
 
     def tearDown(self):
-        pass
+        self.pgoutils.execution('''DROP TABLE public.test CASCADE;''')
+        self.pgoutils.deconnecter()
+        if os.path.exists('test.sql'):
+            os.remove('test.sql')
+        if os.path.exists('test.dump'):
+            os.remove('test.dump')
     
-    def test_sauvegarde_table_sql(self):
+    def test_commande_pg_dump_accessible(self):
+        pgsave = PgSave(hote, bdd, utilisateur, mdp)
+        self.assertTrue(pgsave.verification_commande_pg_dump())
+    
+    def test_sauvegarde_base_fonctionne_avec_parametrage_correct(self):
+        pgsave = PgSave(hote, bdd, utilisateur, mdp)
+        pgsave.sauvegarder_base_format_sql('test.sql')
+        self.assertTrue(os.path.exists('test.sql'))
+        with open('test.sql', encoding='utf-8') as f:
+            txt = f.read()
+        self.assertIn('CREATE DATABASE', txt)
+        self.assertIn('CREATE TABLE test', txt)
+    
+    def test_sauvegarde_base_echoue_si_mdp_incorrect(self):
+        pgsave = PgSave(hote, bdd, utilisateur, 'blabla')
+        p = pgsave.sauvegarder_base_format_sql('test.sql')
+        self.assertFalse(os.path.exists('test.sql'))
+        self.assertIn('password authentication failed', p.stderr)
+    
+    def test_sauvegarde_table_sql_fonctionne_avec_parametrage_correct(self):
         pgsave = PgSave(hote, bdd, utilisateur, mdp)
         pgsave.sauvegarder_tables_format_sql('test.sql', ['public.test'])
+        self.assertTrue(os.path.exists('test.sql'))
+        with open('test.sql', encoding='utf-8') as f:
+            txt = f.read()
+        self.assertIn('CREATE TABLE test', txt)
+    
+    def test_sauvegarde_table_sql_echoue_si_mdp_incorrect(self):
+        pgsave = PgSave(hote, bdd, utilisateur, 'blabla')
+        p = pgsave.sauvegarder_tables_format_sql('test.sql', ['public.test'])
+        self.assertFalse(os.path.exists('test.sql'))
+        self.assertIn('password authentication failed', p.stderr)
+    
+    def test_sauvegarde_table_dump_fonctionne_avec_parametrage_correct(self):
+        pgsave = PgSave(hote, bdd, utilisateur, mdp)
+        pgsave.sauvegarder_tables_format_dump('test.dump', ['public.test'])
+        self.assertTrue(os.path.exists('test.dump'))
+    
+    def test_sauvegarde_table_dump_echoue_si_mdp_incorrect(self):
+        pgsave = PgSave(hote, bdd, utilisateur, 'blabbla')
+        p = pgsave.sauvegarder_tables_format_dump('test.dump', ['public.test'])
+        #self.assertFalse(os.path.exists('test.dump'))
+        self.assertIn('password authentication failed', p.stderr)
+    
     
 if __name__ == '__main__':
     unittest.main()

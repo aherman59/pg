@@ -22,76 +22,95 @@ class PgSave():
     def sauvegarder_base_format_sql(self, fichier):
         '''
         Sauvegarde la base sous format sql dans le nom de fichier spécifié. 
-        Lors de la restauration, la base sera créée.
-        
+        Lors de la restauration, la base sera créée.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        print('-- CREATION SQL: base {0} ({1}) >> Fichier {2}'.format(self.base, self.hote, fichier))
-        cmd_save = 'pg_dump -h {0} -U {1} -v -O -C -f "{2}" {3}'.format(self.hote, self.utilisateur, fichier, self.base)
-        os.system(cmd_save)
-        print('-- FIN CREATION SQL')
+        cmd = self._commande_pg_dump_base_entiere(fichier)
+        return self.executer_commande_pg_dump(cmd)
 
     def sauvegarder_schemas_format_dump(self, fichier, schemas):
         '''
-        Sauvegarde les schemas sous format dump dans le nom de fichier spécifié.
-        
+        Sauvegarde les schemas sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        print('-- CREATION DUMP: base {0} ({1}) - schema {2} >> Fichier {3}'.format(self.base, self.hote, ', '.join(schemas), fichier))
-        cmd_save = 'pg_dump -h {0} -U {1} -Fc -v -f "{2}" -n {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -n '.join(schemas), self.base)
-        os.system(cmd_save)
-        print('-- FIN CREATION DUMP')
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=True)
+        return self.executer_commande_pg_dump(cmd)
 
     def sauvegarder_schemas_format_sql(self, fichier, schemas):
         '''
-        Sauvegarde les schemas sous format sql dans le nom de fichier spécifié.
-        
+        Sauvegarde les schemas sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        print('-- CREATION SQL: base {0} ({1}) - schemas {2} >> Fichier {3}'.format(self.base, self.hote, ', '.join(schemas), fichier))
-        cmd_save = 'pg_dump -h {0} -U {1} -v -O -f "{2}" -n {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -n '.join(schemas), self.base)
-        os.system(cmd_save)
-        print('-- FIN CREATION SQL')
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=False)
+        return self.executer_commande_pg_dump(cmd)
 
     def sauvegarder_tables_format_dump(self, fichier, tables):
         '''
-        Sauvegarde les tables sous format dump dans le nom de fichier spécifié.
-        
+        Sauvegarde les tables sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        print('-- CREATION DUMP: base {0} ({1}) - tables {2} >> Fichier {3}'.format(self.base, self.hote, ', '.join(tables), fichier))
-        cmd_save = 'pg_dump -h {0} -U {1} -Fc -v -f "{2}" -t {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -t '.join(tables), self.base)
-        os.system(cmd_save)
-        print('-- FIN CREATION DUMP')
+        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=True)
+        return self.executer_commande_pg_dump(cmd)
 
     def sauvegarder_tables_format_sql(self, fichier, tables):
         '''
-        Sauvegarde les tables sous format sql dans le nom de fichier spécifié.
-        
+        Sauvegarde les tables sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        print('-- CREATION SQL: base {0} ({1}) - tables {2} >> Fichier {3}'.format(self.base, self.hote, ', '.join(tables), fichier))
-        #cmd_save = 'pg_dump -h {0} -U {1} -v -O -f "{2}" -t {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -t '.join(tables), self.base)
-        #os.system(cmd_save)
+        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=False)
+        return self.executer_commande_pg_dump(cmd)
+    
+    def executer_commande_pg_dump(self, cmd):
+        '''
+        Execute le process pg_dump
+        '''
+        if not self.verification_commande_pg_dump():
+            raise Exception("La commande pg_dump n'existe pas.")
+        print('-- DEBUT CREATION SAUVEGARDE:')        
+        p = subprocess.run(cmd,input=self.mdp, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if p.returncode == 0:
+            print(p.stdout, p.stderr)
+            print('-- FIN CREATION SAUVEGARDE')
+        else:
+            print('ECHEC SAUVEGARDE :', p.stderr)
+        return p
+    
+    def verification_commande_pg_dump(self):
+        cmd = ['pg_dump', '--version']
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if p.returncode == 0 and p.stdout.startswith('pg_dump'):
+            return True
+        return False
+        
+    def _commande_pg_dump_racine(self, fichier, format_dump=False):
         cmd = ['pg_dump', 
                '-h', self.hote, 
                '-U', self.utilisateur, 
-                '-v', '-O', #'-W',
-                '-f', fichier]
+               '-v', '-O', '-W',
+               '-f', fichier]
+        if format_dump:
+            cmd.append('-Fc')
+        return cmd
+    
+    def _commande_pg_dump_base_entiere(self, fichier):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump=False)
+        cmd += ['-C', self.base]
+        return cmd
+    
+    def _commande_pg_dump_schemas(self, fichier, schemas, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump)
+        for schema in schemas:
+            cmd += ['-n', schema]
+        cmd.append(self.base)
+        return cmd
+    
+    def _commande_pg_dump_tables(self, fichier, tables, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump)
         for table in tables:
             cmd += ['-t', table]
         cmd.append(self.base)
-        p = subprocess.Popen(cmd,
-                             stdin=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             universal_newlines=True)
-        #out, err = p.communicate(input = self.mdp)
-        #print('Sortie :', out)
-        #print('Erreur :', err)
-        print('-- FIN CREATION SQL')
-        
-
+        return cmd
+    
 class PgLoad():    
     '''
     Classe permettant de charger des données au format sql à partir de commandes psql
@@ -101,6 +120,10 @@ class PgLoad():
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
+    
+    def charger_fichier_sql(self, fichier_sql):
+        cmd = 'psql -h {0} -U {1} -d {2} -f "{3}"'.format(self.hote, self.utilisateur, self.base, fichier_sql)
+        os.system(cmd)
         
     def charger_fichier_sql_dans_nouvelle_base(self, fichier_sql, postgis = True):
         self.effacer_base()
@@ -119,10 +142,6 @@ class PgLoad():
     
     def creer_extensions_postgis(self):
         cmd = 'psql -h {0} -U {1} -d {2} -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;"'.format(self.hote, self.utilisateur, self.base)
-        os.system(cmd)
-        
-    def charger_fichier_sql(self, fichier_sql):
-        cmd = 'psql -h {0} -U {1} -d {2} -f "{3}"'.format(self.hote, self.utilisateur, self.base, fichier_sql)
         os.system(cmd)   
      
 
