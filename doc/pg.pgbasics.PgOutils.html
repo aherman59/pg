@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: class PgOutils</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>pg.pgbasics.PgOutils</strong> = <a name="pg.pgbasics.PgOutils">class PgOutils</a>(<a href="builtins.html#object">builtins.object</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Classe&nbsp;permettant&nbsp;de&nbsp;réaliser&nbsp;des&nbsp;opérations&nbsp;simples&nbsp;sous&nbsp;une&nbsp;base&nbsp;de&nbsp;données&nbsp;PostgreSQL<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="PgOutils-__init__"><strong>__init__</strong></a>(self, hote, base, port, utilisateur, motdepasse, script=None)</dt><dd><tt>Constructeur<br>
+Se&nbsp;connecte&nbsp;directement&nbsp;à&nbsp;la&nbsp;base&nbsp;de&nbsp;données<br>
+Les&nbsp;requêtes&nbsp;exécutées&nbsp;à&nbsp;partir&nbsp;de&nbsp;l'objet&nbsp;instancié&nbsp;sont&nbsp;écrites&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-ajouter_clef_primaire"><strong>ajouter_clef_primaire</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-ajouter_commentaire_sur_champ"><strong>ajouter_commentaire_sur_champ</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-ajouter_commentaire_sur_table"><strong>ajouter_commentaire_sur_table</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-ajouter_contrainte_check"><strong>ajouter_contrainte_check</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-ajouter_contrainte_unicite"><strong>ajouter_contrainte_unicite</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-changer_schema"><strong>changer_schema</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-charger_requete_sql_depuis"><strong>charger_requete_sql_depuis</strong></a>(self, fichier)</dt></dl>
+
+<dl><dt><a name="PgOutils-compter"><strong>compter</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-connecter"><strong>connecter</strong></a>(self)</dt><dd><tt>Connection&nbsp;de&nbsp;l'objet&nbsp;à&nbsp;la&nbsp;base</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-copier_table"><strong>copier_table</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-copier_table_distante"><strong>copier_table_distante</strong></a>(self, hote_distant, base_distante, port, utilisateur, motdepasse, schema_initial, table_initiale, schema_final, table_finale)</dt><dd><tt>Copie&nbsp;une&nbsp;table&nbsp;d'une&nbsp;base&nbsp;de&nbsp;données&nbsp;distante&nbsp;dans&nbsp;la&nbsp;base&nbsp;locale</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-creer_extension_fdw"><strong>creer_extension_fdw</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_aggregat_first"><strong>creer_fonction_aggregat_first</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_aggregat_fusion_array"><strong>creer_fonction_aggregat_fusion_array</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_array_sort_unique"><strong>creer_fonction_array_sort_unique</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_array_supprimer_null"><strong>creer_fonction_array_supprimer_null</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_convertir_date"><strong>creer_fonction_convertir_date</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_fonction_pgcd"><strong>creer_fonction_pgcd</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_schema"><strong>creer_schema</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_schema_si_inexistant"><strong>creer_schema_si_inexistant</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_serveur_distant_fdw"><strong>creer_serveur_distant_fdw</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_table_etrangere"><strong>creer_table_etrangere</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-creer_user_mapping_pour_serveur_distant_fdw"><strong>creer_user_mapping_pour_serveur_distant_fdw</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-deconnecter"><strong>deconnecter</strong></a>(self)</dt><dd><tt>Déconnexion&nbsp;de&nbsp;l'objet&nbsp;à&nbsp;la&nbsp;base&nbsp;de&nbsp;données</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_et_creer_schema"><strong>effacer_et_creer_schema</strong></a>(self, schema)</dt><dd><tt>Supprime&nbsp;le&nbsp;schéma&nbsp;s'il&nbsp;existe&nbsp;et&nbsp;le&nbsp;recrée.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_et_creer_schemas"><strong>effacer_et_creer_schemas</strong></a>(self, schemas)</dt><dd><tt>Supprime&nbsp;et&nbsp;recrée&nbsp;les&nbsp;schémas.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_et_creer_sequence"><strong>effacer_et_creer_sequence</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-effacer_schema"><strong>effacer_schema</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-effacer_schemas"><strong>effacer_schemas</strong></a>(self, schemas)</dt><dd><tt>Supprime&nbsp;les&nbsp;schemas&nbsp;de&nbsp;la&nbsp;base&nbsp;de&nbsp;données&nbsp;en&nbsp;CASCADE.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_schemas_commencant_par"><strong>effacer_schemas_commencant_par</strong></a>(self, prefixe)</dt><dd><tt>Supprime&nbsp;les&nbsp;schemas&nbsp;commencant&nbsp;par&nbsp;le&nbsp;préfixe&nbsp;spécifié&nbsp;de&nbsp;la&nbsp;base&nbsp;de&nbsp;données&nbsp;en&nbsp;CASCADE.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_serveur_distant_fdw"><strong>effacer_serveur_distant_fdw</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-effacer_table"><strong>effacer_table</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-effacer_table_etrangere"><strong>effacer_table_etrangere</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-effacer_tables"><strong>effacer_tables</strong></a>(self, schema, tables)</dt><dd><tt>Supprime&nbsp;les&nbsp;tables&nbsp;listées&nbsp;du&nbsp;schéma.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_tables_commencant_par"><strong>effacer_tables_commencant_par</strong></a>(self, schema, prefixe)</dt><dd><tt>Supprime&nbsp;les&nbsp;tables&nbsp;du&nbsp;schéma&nbsp;commençant&nbsp;par&nbsp;le&nbsp;prefixe&nbsp;specifié.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-effacer_user_mapping_pour_serveur_distant_fdw"><strong>effacer_user_mapping_pour_serveur_distant_fdw</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-end_script"><strong>end_script</strong></a>(self)</dt><dd><tt>Ecrit&nbsp;la&nbsp;fin&nbsp;d'exécution&nbsp;du&nbsp;script.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-execution"><strong>execution</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
+Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
+Se&nbsp;déconnecte<br>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-execution_et_ecriture_script"><strong>execution_et_ecriture_script</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
+Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
+Se&nbsp;déconnecte<br>
+Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;<br>
+ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-execution_et_recuperation"><strong>execution_et_recuperation</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
+Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
+Se&nbsp;déconnecte<br>
+Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
+Renvoie&nbsp;le&nbsp;résultat&nbsp;de&nbsp;la&nbsp;requete&nbsp;sous&nbsp;forme&nbsp;d'une&nbsp;liste&nbsp;de&nbsp;tuple&nbsp;ou&nbsp;None&nbsp;en&nbsp;cas&nbsp;d'échec</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-execution_multiple"><strong>execution_multiple</strong></a>(self, sql, donnees, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
+Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;multiple&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
+Se&nbsp;déconnecte<br>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-lister_champs"><strong>lister_champs</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_schemas"><strong>lister_schemas</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_schemas_commencant_par"><strong>lister_schemas_commencant_par</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_tables"><strong>lister_tables</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_tables_commencant_par"><strong>lister_tables_commencant_par</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_valeurs"><strong>lister_valeurs</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-lister_valeurs_distinctes"><strong>lister_valeurs_distinctes</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-mettre_en_place_serveur_distant_fdw"><strong>mettre_en_place_serveur_distant_fdw</strong></a>(self, hote_distant, base_distante, port, utilisateur, motdepasse, nom_serveur_distant)</dt><dd><tt>Prépare&nbsp;un&nbsp;serveur&nbsp;distant&nbsp;fdw&nbsp;et&nbsp;crée&nbsp;un&nbsp;user&nbsp;mapping&nbsp;associé.</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-redaction_script"><strong>redaction_script</strong></a>(self, file, sql, effacement)</dt><dd><tt>Ecrit&nbsp;la&nbsp;requête&nbsp;sql&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;défini.<br>
+Efface&nbsp;le&nbsp;contenu&nbsp;du&nbsp;fichier&nbsp;si&nbsp;effacement&nbsp;est&nbsp;à&nbsp;True</tt></dd></dl>
+
+<dl><dt><a name="PgOutils-renommer_table"><strong>renommer_table</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-search_path"><strong>search_path</strong></a> = interne(self, *args, **kwargs)</dt></dl>
+
+<dl><dt><a name="PgOutils-start_script"><strong>start_script</strong></a>(self)</dt><dd><tt>Ecrit&nbsp;le&nbsp;début&nbsp;d'exécution&nbsp;du&nbsp;script.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>END_SCRIPT</strong> = "<font color="#c040c0">\n</font>--<font color="#c040c0">\n</font>-- Fin d'exécution le {0:%d}/{0:%m}/{0:%Y} à {0:%H}:{0:%M}:{0:%S}<font color="#c040c0">\n</font>--<font color="#c040c0">\n\n</font>"</dl>
+
+<dl><dt><strong>START_SCRIPT</strong> = "<font color="#c040c0">\n</font>--<font color="#c040c0">\n</font>-- Début d'exécution le {0:%d}/{0:%m}/{0:%Y} à {0:%H}:{0:%M}:{0:%S}<font color="#c040c0">\n</font>--<font color="#c040c0">\n\n</font>"</dl>
+
+</td></tr></table>
+</body></html>

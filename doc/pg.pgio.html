@@ -160,23 +160,27 @@ Methods inherited from <a href="pg.pgbasics.html#PgOutils">pg.pgbasics.PgOutils<
 <dl><dt><a name="PgExport-execution"><strong>execution</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
 
 <dl><dt><a name="PgExport-execution_et_ecriture_script"><strong>execution_et_ecriture_script</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
 Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;<br>
+ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
 
 <dl><dt><a name="PgExport-execution_et_recuperation"><strong>execution_et_recuperation</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;le&nbsp;résultat&nbsp;de&nbsp;la&nbsp;requete&nbsp;sous&nbsp;forme&nbsp;d'une&nbsp;liste&nbsp;de&nbsp;tuple</tt></dd></dl>
+Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
+Renvoie&nbsp;le&nbsp;résultat&nbsp;de&nbsp;la&nbsp;requete&nbsp;sous&nbsp;forme&nbsp;d'une&nbsp;liste&nbsp;de&nbsp;tuple&nbsp;ou&nbsp;None&nbsp;en&nbsp;cas&nbsp;d'échec</tt></dd></dl>
 
 <dl><dt><a name="PgExport-execution_multiple"><strong>execution_multiple</strong></a>(self, sql, donnees, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;multiple&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
 
 <dl><dt><a name="PgExport-lister_champs"><strong>lister_champs</strong></a> = interne(self, *args, **kwargs)</dt></dl>
 
@@ -316,23 +320,27 @@ Methods inherited from <a href="pg.pgbasics.html#PgOutils">pg.pgbasics.PgOutils<
 <dl><dt><a name="PgImport-execution"><strong>execution</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
 
 <dl><dt><a name="PgImport-execution_et_ecriture_script"><strong>execution_et_ecriture_script</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
 Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;<br>
+ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
 
 <dl><dt><a name="PgImport-execution_et_recuperation"><strong>execution_et_recuperation</strong></a>(self, sql, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;le&nbsp;résultat&nbsp;de&nbsp;la&nbsp;requete&nbsp;sous&nbsp;forme&nbsp;d'une&nbsp;liste&nbsp;de&nbsp;tuple</tt></dd></dl>
+Ecrit&nbsp;la&nbsp;requete&nbsp;correspondante&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini<br>
+Renvoie&nbsp;le&nbsp;résultat&nbsp;de&nbsp;la&nbsp;requete&nbsp;sous&nbsp;forme&nbsp;d'une&nbsp;liste&nbsp;de&nbsp;tuple&nbsp;ou&nbsp;None&nbsp;en&nbsp;cas&nbsp;d'échec</tt></dd></dl>
 
 <dl><dt><a name="PgImport-execution_multiple"><strong>execution_multiple</strong></a>(self, sql, donnees, max_tentative=3)</dt><dd><tt>Se&nbsp;connecte<br>
 Tente&nbsp;l'execution&nbsp;d'une&nbsp;requete&nbsp;multiple&nbsp;sql&nbsp;(3&nbsp;fois&nbsp;par&nbsp;défaut)<br>
 Se&nbsp;déconnecte<br>
-Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête</tt></dd></dl>
+Renvoie&nbsp;True&nbsp;si&nbsp;la&nbsp;requete&nbsp;a&nbsp;réussi&nbsp;ainsi&nbsp;que&nbsp;le&nbsp;nombre&nbsp;de&nbsp;lignes&nbsp;modifiées&nbsp;ou&nbsp;renvoyées&nbsp;en&nbsp;fonction&nbsp;du&nbsp;type&nbsp;de&nbsp;requête<br>
+La&nbsp;requete&nbsp;sql&nbsp;n'est&nbsp;pas&nbsp;écrite&nbsp;dans&nbsp;le&nbsp;fichier&nbsp;script&nbsp;défini.</tt></dd></dl>
 
 <dl><dt><a name="PgImport-lister_champs"><strong>lister_champs</strong></a> = interne(self, *args, **kwargs)</dt></dl>
 

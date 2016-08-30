@@ -2,6 +2,7 @@
 @author: antoine.herman
 '''
 import os
+import subprocess
 import csv
 from pg.pgbasics import *
 from pg.pgsqlite import SqliteConn
@@ -12,10 +13,11 @@ class PgSave():
     Classe permettant de sauvegarder sous format sql ou dump à partir de commandes pg_dump
     '''
     
-    def __init__(self, hote, base, utilisateur):
+    def __init__(self, hote, base, utilisateur, mdp):
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
+        self.mdp = mdp
 
     def sauvegarder_base_format_sql(self, fichier):
         '''
@@ -69,8 +71,24 @@ class PgSave():
         La commande pg_dump doit être disponible sur la machine.
         '''
         print('-- CREATION SQL: base {0} ({1}) - tables {2} >> Fichier {3}'.format(self.base, self.hote, ', '.join(tables), fichier))
-        cmd_save = 'pg_dump -h {0} -U {1} -v -O -f "{2}" -t {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -t '.join(tables), self.base)
-        os.system(cmd_save)
+        #cmd_save = 'pg_dump -h {0} -U {1} -v -O -f "{2}" -t {3} {4}'.format(self.hote, self.utilisateur, fichier, ' -t '.join(tables), self.base)
+        #os.system(cmd_save)
+        cmd = ['pg_dump', 
+               '-h', self.hote, 
+               '-U', self.utilisateur, 
+                '-v', '-O', #'-W',
+                '-f', fichier]
+        for table in tables:
+            cmd += ['-t', table]
+        cmd.append(self.base)
+        p = subprocess.Popen(cmd,
+                             stdin=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE,
+                             universal_newlines=True)
+        #out, err = p.communicate(input = self.mdp)
+        #print('Sortie :', out)
+        #print('Erreur :', err)
         print('-- FIN CREATION SQL')
         
 
