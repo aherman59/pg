@@ -13,51 +13,52 @@ class PgSave():
     Classe permettant de sauvegarder sous format sql ou dump à partir de commandes pg_dump
     '''
     
-    def __init__(self, hote, base, utilisateur, mdp):
+    def __init__(self, hote, base, utilisateur, mdp, demande_mdp = True):
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
         self.mdp = mdp
+        self.demande_mdp = demande_mdp
 
-    def sauvegarder_base_format_sql(self, fichier, demande_mdp):
+    def sauvegarder_base_format_sql(self, fichier):
         '''
         Sauvegarde la base sous format sql dans le nom de fichier spécifié. 
         Lors de la restauration, la base sera créée.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_base_entiere(fichier, demande_mdp=demande_mdp)
+        cmd = self._commande_pg_dump_base_entiere(fichier)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_schemas_format_dump(self, fichier, schemas, demande_mdp):
+    def sauvegarder_schemas_format_dump(self, fichier, schemas):
         '''
         Sauvegarde les schemas sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_schemas(fichier, schemas, demande_mdp=demande_mdp, format_dump=True)
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=True)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_schemas_format_sql(self, fichier, schemas, demande_mdp):
+    def sauvegarder_schemas_format_sql(self, fichier, schemas):
         '''
         Sauvegarde les schemas sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_schemas(fichier, schemas, demande_mdp=demande_mdp, format_dump=False)
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=False)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_tables_format_dump(self, fichier, tables, demande_mdp):
+    def sauvegarder_tables_format_dump(self, fichier, tables):
         '''
         Sauvegarde les tables sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_tables(fichier, tables, demande_mdp=demande_mdp, format_dump=True)
+        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=True)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_tables_format_sql(self, fichier, tables, demande_mdp):
+    def sauvegarder_tables_format_sql(self, fichier, tables):
         '''
         Sauvegarde les tables sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_tables(fichier, tables, demande_mdp=demande_mdp, format_dump=False)
+        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=False)
         return self.executer_commande_pg_dump(cmd)
     
     def executer_commande_pg_dump(self, cmd):
@@ -82,7 +83,7 @@ class PgSave():
             return True
         return False
         
-    def _commande_pg_dump_racine(self, fichier, format_dump=False, demande_mdp = True):
+    def _commande_pg_dump_racine(self, fichier, format_dump=False):
         cmd = ['pg_dump', 
                '-h', self.hote, 
                '-U', self.utilisateur, 
@@ -90,24 +91,24 @@ class PgSave():
                '-f', fichier]
         if format_dump:
             cmd.append('-Fc')
-        if demande_mdp:
+        if self.demande_mdp:
             cmd.append('-W')
         return cmd
     
-    def _commande_pg_dump_base_entiere(self, fichier, demande_mdp):
-        cmd = self._commande_pg_dump_racine(fichier, demande_mdp=demande_mdp)
+    def _commande_pg_dump_base_entiere(self, fichier):
+        cmd = self._commande_pg_dump_racine(fichier)
         cmd += ['-C', self.base]
         return cmd
     
-    def _commande_pg_dump_schemas(self, fichier, schemas, demande_mdp, format_dump=False):
-        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump, demande_mdp=demande_mdp)
+    def _commande_pg_dump_schemas(self, fichier, schemas, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump)
         for schema in schemas:
             cmd += ['-n', schema]
         cmd.append(self.base)
         return cmd
     
-    def _commande_pg_dump_tables(self, fichier, tables, demande_mdp, format_dump=False):
-        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump, demande_mdp=demande_mdp)
+    def _commande_pg_dump_tables(self, fichier, tables, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump)
         for table in tables:
             cmd += ['-t', table]
         cmd.append(self.base)
@@ -118,34 +119,78 @@ class PgLoad():
     Classe permettant de charger des données au format sql à partir de commandes psql
     '''
     
-    def __init__(self, hote, base, utilisateur):
+    def __init__(self, hote, base, utilisateur, mdp, demande_mdp = True):
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
+        self.mdp = mdp
+        self.demande_mdp = demande_mdp
     
     def charger_fichier_sql(self, fichier_sql):
-        cmd = 'psql -h {0} -U {1} -d {2} -f "{3}"'.format(self.hote, self.utilisateur, self.base, fichier_sql)
-        os.system(cmd)
+        cmd = self._commande_psql_fichier(fichier_sql, specifier_bdd = True)
+        return self.executer_commande_psql(cmd)
         
     def charger_fichier_sql_dans_nouvelle_base(self, fichier_sql, postgis = True):
         self.effacer_base()
         self.creer_nouvelle_base()
         if postgis :
             self.creer_extensions_postgis()
-        self.charger_fichier_sql(fichier_sql)
+        return self.charger_fichier_sql(fichier_sql)
     
     def effacer_base(self):
-        cmd = 'psql -h {0} -U {1} -c "DROP DATABASE IF EXISTS {2};"'.format(self.hote, self.utilisateur, self.base)
-        os.system(cmd)
+        requete = "DROP DATABASE IF EXISTS {0};".format(self.base)
+        cmd = self._commande_psql_requete(requete, specifier_bdd = False)
+        return self.executer_commande_psql(cmd)
     
     def creer_nouvelle_base(self):
-        cmd = 'psql -h {0} -U {1} -c "CREATE DATABASE {2};"'.format(self.hote, self.utilisateur, self.base)
-        os.system(cmd)
+        requete = "CREATE DATABASE {0};".format(self.base)
+        cmd = self._commande_psql_requete(requete, specifier_bdd = False)
+        return self.executer_commande_psql(cmd)
     
     def creer_extensions_postgis(self):
-        cmd = 'psql -h {0} -U {1} -d {2} -c "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;"'.format(self.hote, self.utilisateur, self.base)
-        os.system(cmd)   
+        requete = "CREATE EXTENSION postgis; CREATE EXTENSION postgis_topology;"
+        cmd = self._commande_psql_requete(requete, specifier_bdd = True)
+        return self.executer_commande_psql(cmd)
+        
+    def executer_commande_psql(self, cmd):
+        '''
+        Execute le process psql
+        '''
+        if not self.verification_commande_psql():
+            raise Exception("La commande psql n'existe pas.")        
+        p = subprocess.run(cmd, input=self.mdp, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if p.returncode == 0:
+            print(p.stdout, p.stderr)
+        else:
+            print(p.stderr)
+        return p
+    
+    def verification_commande_psql(self):
+        cmd = ['psql', '--version']
+        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        if p.returncode == 0 and p.stdout.startswith('psql'):
+            return True
+        return False
+    
+    def _commande_psql_racine(self, specifier_bdd):
+        cmd = ['psql', 
+               '-h', self.hote, 
+               '-U', self.utilisateur]
+        if self.demande_mdp:
+            cmd.append('-W')
+        if specifier_bdd:
+            cmd += ['-d', self.base]
+        return cmd
+    
+    def _commande_psql_requete(self, requete, specifier_bdd):
+        cmd = self._commande_psql_racine(specifier_bdd)
+        cmd += ['-c', requete]
+        return cmd   
      
+    def _commande_psql_fichier(self, fichier, specifier_bdd):
+        cmd = self._commande_psql_racine(specifier_bdd)
+        cmd += ['-f', fichier]
+        return cmd  
 
 class PgExport(PgOutils):
     '''
