@@ -19,45 +19,45 @@ class PgSave():
         self.utilisateur = utilisateur
         self.mdp = mdp
 
-    def sauvegarder_base_format_sql(self, fichier):
+    def sauvegarder_base_format_sql(self, fichier, demande_mdp):
         '''
         Sauvegarde la base sous format sql dans le nom de fichier spécifié. 
         Lors de la restauration, la base sera créée.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_base_entiere(fichier)
+        cmd = self._commande_pg_dump_base_entiere(fichier, demande_mdp=demande_mdp)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_schemas_format_dump(self, fichier, schemas):
+    def sauvegarder_schemas_format_dump(self, fichier, schemas, demande_mdp):
         '''
         Sauvegarde les schemas sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=True)
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, demande_mdp=demande_mdp, format_dump=True)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_schemas_format_sql(self, fichier, schemas):
+    def sauvegarder_schemas_format_sql(self, fichier, schemas, demande_mdp):
         '''
         Sauvegarde les schemas sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_schemas(fichier, schemas, format_dump=False)
+        cmd = self._commande_pg_dump_schemas(fichier, schemas, demande_mdp=demande_mdp, format_dump=False)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_tables_format_dump(self, fichier, tables):
+    def sauvegarder_tables_format_dump(self, fichier, tables, demande_mdp):
         '''
         Sauvegarde les tables sous format dump dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=True)
+        cmd = self._commande_pg_dump_tables(fichier, tables, demande_mdp=demande_mdp, format_dump=True)
         return self.executer_commande_pg_dump(cmd)
 
-    def sauvegarder_tables_format_sql(self, fichier, tables):
+    def sauvegarder_tables_format_sql(self, fichier, tables, demande_mdp):
         '''
         Sauvegarde les tables sous format sql dans le nom de fichier spécifié.        
         La commande pg_dump doit être disponible sur la machine.
         '''
-        cmd = self._commande_pg_dump_tables(fichier, tables, format_dump=False)
+        cmd = self._commande_pg_dump_tables(fichier, tables, demande_mdp=demande_mdp, format_dump=False)
         return self.executer_commande_pg_dump(cmd)
     
     def executer_commande_pg_dump(self, cmd):
@@ -82,30 +82,32 @@ class PgSave():
             return True
         return False
         
-    def _commande_pg_dump_racine(self, fichier, format_dump=False):
+    def _commande_pg_dump_racine(self, fichier, format_dump=False, demande_mdp = True):
         cmd = ['pg_dump', 
                '-h', self.hote, 
                '-U', self.utilisateur, 
-               '-v', '-O', '-W',
+               '-v', '-O',
                '-f', fichier]
         if format_dump:
             cmd.append('-Fc')
+        if demande_mdp:
+            cmd.append('-W')
         return cmd
     
-    def _commande_pg_dump_base_entiere(self, fichier):
-        cmd = self._commande_pg_dump_racine(fichier, format_dump=False)
+    def _commande_pg_dump_base_entiere(self, fichier, demande_mdp):
+        cmd = self._commande_pg_dump_racine(fichier, demande_mdp=demande_mdp)
         cmd += ['-C', self.base]
         return cmd
     
-    def _commande_pg_dump_schemas(self, fichier, schemas, format_dump=False):
-        cmd = self._commande_pg_dump_racine(fichier, format_dump)
+    def _commande_pg_dump_schemas(self, fichier, schemas, demande_mdp, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump, demande_mdp=demande_mdp)
         for schema in schemas:
             cmd += ['-n', schema]
         cmd.append(self.base)
         return cmd
     
-    def _commande_pg_dump_tables(self, fichier, tables, format_dump=False):
-        cmd = self._commande_pg_dump_racine(fichier, format_dump)
+    def _commande_pg_dump_tables(self, fichier, tables, demande_mdp, format_dump=False):
+        cmd = self._commande_pg_dump_racine(fichier, format_dump=format_dump, demande_mdp=demande_mdp)
         for table in tables:
             cmd += ['-t', table]
         cmd.append(self.base)
