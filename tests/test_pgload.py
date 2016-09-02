@@ -10,9 +10,9 @@ utilisateur = 'postgres'
 mdp = 'postgres'
 port = '5432'
 
-demande_mdp = True
+demande_mdp = False
 
-class TestPGSave(unittest.TestCase):
+class TestPGLoad(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -40,6 +40,8 @@ class TestPGSave(unittest.TestCase):
         pgload.charger_fichier_sql_dans_nouvelle_base('test.sql')
         pgoutils = PgOutils(hote, bdd, port, utilisateur, mdp)
         self.assertIn('test', pgoutils.lister_tables('public'))
+        os.system('''psql -h {0} -p {1} -U {2} -c "DROP DATABASE {3};"'''.format(hote, port, utilisateur, bdd))
+    
 
 
 if __name__ == '__main__':

@@ -279,7 +279,7 @@ class PgExport(PgOutils):
             self.exporter_table_vers_csv(schema, table, fichier_csv, delimiteur, limit = limit)
         
     def _ecrire_dans_csv(self, fichier_csv, champs, donnees, delimiteur):
-        with open(fichier_csv, 'wt',encoding ='utf-8') as fichier:
+        with open(fichier_csv, 'w',encoding ='utf-8', newline = '\n') as fichier:
             csv_writer = csv.writer(fichier, delimiter = delimiteur)
             csv_writer.writerow(champs)
             for ligne in donnees:
