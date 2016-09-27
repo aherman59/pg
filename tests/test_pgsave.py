@@ -10,7 +10,7 @@ utilisateur = 'postgres'
 mdp = 'postgres'
 port = '5432'
 
-demande_mdp = True
+demande_mdp = False
 
 class TestPGSave(unittest.TestCase):
 
@@ -116,7 +116,10 @@ class TestPGSave(unittest.TestCase):
     def test_sauvegarde_table_dump_echoue_si_utilisateur_incorrect(self):
         pgsave = PgSave(hote, bdd, 'blabla', mdp, demande_mdp)
         p = pgsave.sauvegarder_tables_format_dump('test.dump', ['public.test'])
-        self.assertIn('password authentication failed', p.stderr)
+        if demande_mdp:
+            self.assertIn('password authentication failed', p.stderr)
+        else:
+            self.assertIn('FATAL', p.stderr)
            
     def test_sauvegarde_schema_sql_fonctionne_avec_parametrage_correct(self):
         self.assertFalse(os.path.exists('test.sql'))
@@ -162,8 +165,10 @@ class TestPGSave(unittest.TestCase):
     def test_sauvegarde_schema_dump_echoue_si_utilisateur_incorrect(self):
         pgsave = PgSave(hote, bdd, 'blabla', mdp, demande_mdp)
         p = pgsave.sauvegarder_schemas_format_dump('test.dump', ['public'])
-        self.assertIn('password authentication failed', p.stderr)
-    
+        if demande_mdp:
+            self.assertIn('password authentication failed', p.stderr)
+        else:
+            self.assertIn('FATAL', p.stderr)
             
     
 if __name__ == '__main__':
