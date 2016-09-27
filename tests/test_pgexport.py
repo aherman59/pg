@@ -18,6 +18,14 @@ class TestPGExport(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         os.system('''psql -h {0} -p {1} -U {2} -c "CREATE DATABASE {3};"'''.format(hote, port, utilisateur, bdd))
+        pgexport = PgExport(hote, bdd, port, utilisateur, mdp)
+        pgexport.execution('''CREATE TABLE public.test (id serial, nom TEXT, prenom TEXT, age INTEGER);''')
+        pgexport.execution_multiple('''INSERT INTO public.test (nom, prenom, age) VALUES (%s,%s,%s);''', 
+                                    [('McFly', 'Marty', 20),
+                                     ('Doc', 'Emmett', 60),
+                                     ('Tannen', 'Biff', 22),
+                                     ('Abidbol', 'Georges', 45),
+                                     ('Capone', 'Al', 50)])
     
     @classmethod
     def tearDownClass(cls):
@@ -27,17 +35,8 @@ class TestPGExport(unittest.TestCase):
     
     def setUp(self):
         self.pgexport = PgExport(hote, bdd, port, utilisateur, mdp)
-        self.pgexport.execution('''CREATE TABLE public.test (id serial, nom TEXT, prenom TEXT, age INTEGER);''')
-        self.pgexport.execution_multiple('''INSERT INTO public.test (nom, prenom, age) VALUES (%s,%s,%s);''', 
-                                    [('McFly', 'Marty', 20),
-                                     ('Doc', 'Emmett', 60),
-                                     ('Tannen', 'Biff', 22),
-                                     ('Abidbol', 'Georges', 45),
-                                     ('Capone', 'Al', 50)])
-
+            
     def tearDown(self):
-        self.pgexport.execution('''DROP TABLE public.test CASCADE;''')
-        self.pgexport.deconnecter()
         if os.path.exists('export_test.csv'):
             os.remove('export_test.csv')
             
