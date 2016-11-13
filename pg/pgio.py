@@ -13,7 +13,7 @@ class PgSave():
     Classe permettant de sauvegarder sous format sql ou dump à partir de commandes pg_dump
     '''
     
-    def __init__(self, hote, base, utilisateur, mdp, demande_mdp = True):
+    def __init__(self, hote=None, base=None, utilisateur=None, mdp=None, demande_mdp=True):
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
@@ -119,7 +119,7 @@ class PgLoad():
     Classe permettant de charger des données au format sql à partir de commandes psql
     '''
     
-    def __init__(self, hote, base, utilisateur, mdp, demande_mdp = True):
+    def __init__(self, hote=None, base=None, utilisateur=None, mdp=None, demande_mdp=True):
         self.hote = hote
         self.base = base
         self.utilisateur = utilisateur
@@ -199,7 +199,7 @@ class PgExport(PgOutils):
     
     VUE_TEMPORAIRE = 'public.temporaire'
     
-    def __init__(self, hote, base, port, utilisateur, motdepasse):
+    def __init__(self, hote=None, base=None, port=None, utilisateur=None, motdepasse=None):
         super().__init__(hote, base, port, utilisateur, motdepasse) 
     
     def _creer_vue_temporaire(self, select_sql):
@@ -367,7 +367,7 @@ class PgImport(PgOutils):
     Classe permettant d'importer des tables dans PostgreSQL depuis d'autres formats (sqlite, csv, etc.)
     '''
         
-    def __init__(self, hote, base, port, utilisateur, motdepasse):
+    def __init__(self, hote=None, base=None, port=None, utilisateur=None, motdepasse=None):
         super().__init__(hote, base, port, utilisateur, motdepasse)
     
     def importer_table_depuis_sqlite(self, fichier_sqlite, table_sqlite, schema, table):

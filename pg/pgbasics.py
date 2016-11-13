@@ -18,52 +18,52 @@ DECORATEURS
 '''
 
 def requete_sql(fonction):    
-    def interne(self, *args, **kwargs):        
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        reussite, nb = self.execution_et_ecriture_script(requete)
+    def interne(objet, *args, **kwargs):        
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        reussite, nb = objet.execution_et_ecriture_script(requete)
         return reussite, nb
     return interne
 
 def requete_sql_avec_modification_args(fonction):    
-    def interne(self, *args, **kwargs):
-        args = fonction(self, *args, **kwargs)        
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        reussite, nb = self.execution_et_ecriture_script(requete)
+    def interne(objet, *args, **kwargs):
+        args = fonction(objet, *args, **kwargs)        
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        reussite, nb = objet.execution_et_ecriture_script(requete)
         return reussite, nb
     return interne
 
 def select_sql(fonction):    
-    def interne(self, *args, **kwargs):
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        resultat = self.execution_et_recuperation(requete)
+    def interne(objet, *args, **kwargs):
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        resultat = objet.execution_et_recuperation(requete)
         if resultat is not None:
             return resultat if len(resultat) > 0 else []
         return None
     return interne
 
 def select_sql_avec_modification_args(fonction):    
-    def interne(self, *args, **kwargs):
-        args = fonction(self, *args, **kwargs)        
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        resultat = self.execution_et_recuperation(requete)
+    def interne(objet, *args, **kwargs):
+        args = fonction(objet, *args, **kwargs)        
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        resultat = objet.execution_et_recuperation(requete)
         if resultat is not None:
             return resultat if len(resultat) > 0 else []
         return None
     return interne
 
 def select_sql_champ_unique(fonction):    
-    def interne(self, *args, **kwargs):
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        resultat = self.execution_et_recuperation(requete)
+    def interne(objet, *args, **kwargs):
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        resultat = objet.execution_et_recuperation(requete)
         if resultat is not None:   
             return [r[0] for r in resultat] if len(resultat) > 0 else []
         return None
     return interne
 
 def select_sql_valeur_unique(fonction):    
-    def interne(self, *args, **kwargs):
-        requete = self.requete_sql[fonction.__name__.upper()].format(*args)
-        resultat = self.execution_et_recuperation(requete)
+    def interne(objet, *args, **kwargs):
+        requete = objet.requete_sql[fonction.__name__.upper()].format(*args)
+        resultat = objet.execution_et_recuperation(requete)
         if resultat is not None:
             return resultat[0][0] if len(resultat) > 0 else []
         return None 
@@ -96,7 +96,7 @@ class PgOutils():
 '''
 
 
-    def __init__(self, hote, base, port, utilisateur, motdepasse, script = None):
+    def __init__(self, hote=None, base=None, port=None, utilisateur=None, motdepasse=None, script=None):
         '''
         Constructeur
         Se connecte directement à la base de données
@@ -587,7 +587,7 @@ class PgConn():
     Classe permettant de se connecter à une base Postgresql, à y effectuer des requêtes et à y importer des fichiers csv
     '''
 
-    def __init__(self, hote, base, port, utilisateur, motdepasse, connection_directe = True):
+    def __init__(self, hote=None, base=None, port=None, utilisateur=None, motdepasse=None, connection_directe = True):
         '''
         Constructeur qui prend les paramètres de connexion suivant:
         - hote
@@ -715,4 +715,3 @@ class PgConn():
                 print(ligne, end='', file=f)
 
 #eof
-    
