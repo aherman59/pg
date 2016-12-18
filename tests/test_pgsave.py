@@ -10,7 +10,7 @@ utilisateur = 'postgres'
 mdp = 'postgres'
 port = '5432'
 
-demande_mdp = False
+demande_mdp = True
 
 class TestPGSave(unittest.TestCase):
 

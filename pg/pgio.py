@@ -4,9 +4,10 @@
 import os
 import subprocess
 import csv
-from pg.pgbasics import *
-from pg.pgsqlite import SqliteConn
-
+#from pg.pgbasics import *
+from pgbasics import *
+#from pg.pgsqlite import SqliteConn
+from pgsqlite import SqliteConn
 
 class PgSave():    
     '''
@@ -393,3 +394,26 @@ class PgImport(PgOutils):
     def _inserer_donnees_dans_postgres(self, donnees, schema, table):
         insert = 'INSERT INTO {0} VALUES ({1});'.format(schema + '.' + table, ', '.join(['%s']*len(donnees[0])))
         self.execution_multiple(insert, donnees)
+        
+    def importer_table_depuis_csv(self, fichier_csv, schema, table, separateur):
+        lignes = self.pgconn._lire_lignes_csv(fichier_csv)
+        entete = [elt.strip() for elt in next(lignes).split(separateur)]
+        self.effacer_table(schema, table)
+        champs = ' TEXT, '.join(entete) + ' TEXT'        
+        create_table = '''CREATE TABLE {0}.{1} ({2});'''.format(schema, table, champs)
+        self.execution_et_ecriture_script(create_table)
+        self.pgconn.copy_from_csv(fichier_csv, separateur, schema + '.' + table, entete=True)
+
+if __name__ == '__main__':
+    fichier_csv = '/home/antoine/Téléchargements/code_insee_france2016.txt'
+    fichier_sqlite = '/home/antoine/Téléchargements/base.sqlite3'
+    params = {'base':'pgtest',
+              'hote':'localhost', 
+              'port':'5432', 
+              'utilisateur':'postgres', 
+              'motdepasse':'postgres'}
+    pgimport = PgImport(**params)
+    pgimport.importer_table_depuis_csv(fichier_csv, 'public', 'test', separateur='\t')
+    pgexport = PgExport(**params)
+    pgexport.exporter_table_vers_sqlite('public', 'test', fichier_sqlite, 'communes', recreer_table=True)
+     

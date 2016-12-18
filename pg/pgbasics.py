@@ -683,7 +683,7 @@ class PgConn():
             Si entete est à True, la première ligne sera ignorée.
             
         """ 
-        lignes = self._lire_lignes_csv(fichier_csv, separateur)
+        lignes = self._lire_lignes_csv(fichier_csv)
         self._ecrire_lignes_dans_csv(lignes, 'tmp', entete)
         
         if not self.conn_actif:
@@ -700,7 +700,7 @@ class PgConn():
         return True                  
 
 
-    def _lire_lignes_csv(self, fichier_csv, separateur):
+    def _lire_lignes_csv(self, fichier_csv):
         """ Générateur qui renvoie les lignes d'un fichier csv encodé en UTF-8"""
         with open(fichier_csv, 'r', encoding = 'utf-8') as f:
             for ligne in f:
