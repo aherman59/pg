@@ -7,7 +7,7 @@ Le résultat est dans le répertoire dist
 
 Installation de l'archive sur un autre environnement
 
-  pip install pg-0.1.5.zip
+  pip install pg-0.1.6.zip
 
 
 """
@@ -18,7 +18,7 @@ from setuptools import find_packages
 
 setup(
     name='pg',
-    version='0.1.5',
+    version='0.1.6',
     description='module facilitant les interactions avec une base PostgreSQL',
     author='Antoine HERMAN',
     author_email='antoine.herman@cerema.fr',
@@ -27,7 +27,7 @@ setup(
     packages = find_packages(),
     package_data = {'pg': ['*.sql']},
     include_package_data=True,
-    install_requires=['psycopg2==2.6.1'],
+    install_requires=['psycopg2>=2.6.1'],
 )
 
 # eof
