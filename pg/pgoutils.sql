@@ -21,12 +21,13 @@ DROP SEQUENCE IF EXISTS {0}.{1};
 CREATE SEQUENCE {0}.{1};
 
 ## LISTER_SCHEMAS
-SELECT schema_name FROM information_schema.schemata;
+SELECT nspname
+FROM pg_catalog.pg_namespace 
 
 ## LISTER_SCHEMAS_COMMENCANT_PAR 
-SELECT schema_name 
-FROM information_schema.schemata 
-WHERE schema_name LIKE '{0}%';
+SELECT nspname
+FROM pg_catalog.pg_namespace 
+WHERE nspname LIKE '{0}%';
 
 ## LISTER_TABLES
 SELECT tablename 
