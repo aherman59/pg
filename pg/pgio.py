@@ -4,10 +4,10 @@
 import os
 import subprocess
 import csv
-#from pg.pgbasics import *
-from pgbasics import *
-#from pg.pgsqlite import SqliteConn
-from pgsqlite import SqliteConn
+from pg.pgbasics import *
+#from pgbasics import *
+from pg.pgsqlite import SqliteConn
+#from pgsqlite import SqliteConn
 
 class PgSave():    
     '''
