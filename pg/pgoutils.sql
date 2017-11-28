@@ -29,6 +29,11 @@ SELECT nspname
 FROM pg_catalog.pg_namespace 
 WHERE nspname LIKE '{0}%';
 
+## LISTER_SCHEMAS_CONTENANT 
+SELECT nspname
+FROM pg_catalog.pg_namespace 
+WHERE nspname LIKE '%{0}%';
+
 ## LISTER_TABLES
 SELECT tablename 
 FROM pg_tables 

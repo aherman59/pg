@@ -386,6 +386,13 @@ class PgOutils():
         pass
     
     @select_sql_champ_unique
+    def lister_schemas_contenant(self, chaine):
+        '''
+        Renvoie, sous forme de liste, les schémas de la base de données contenant la chaine de caractères
+        '''
+        pass
+    
+    @select_sql_champ_unique
     def lister_tables(self, schema):
         '''
         Renvoie, sous forme de liste, les noms des tables du schéma
