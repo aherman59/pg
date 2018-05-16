@@ -57,6 +57,7 @@ SELECT
 				WHEN udt_name = '_int4' THEN 'INTEGER[]'
 				WHEN udt_name = '_varchar' THEN 'CHARACTER VARYING[]'
 				WHEN udt_name = '_numeric' THEN 'NUMERIC[]'
+				WHEN udt_name = '_date' THEN 'DATE[]'
 			END
 		WHEN data_type = 'USER-DEFINED' THEN 'geometry'
 		ELSE data_type 

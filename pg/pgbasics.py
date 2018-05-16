@@ -625,7 +625,7 @@ class PgConn():
         
         ''' 
         try:  
-            self.connection = psycopg2.connect(host=self.hote, database=self.base, user=self.utilisateur, password=self.motdepasse, port=self.port)
+            self.connection = psycopg2.connect(host=self.hote, dbname=self.base, user=self.utilisateur, password=self.motdepasse, port=self.port)
             self.connection.set_client_encoding(client_encoding)            
             self.conn_actif = True            
         except Exception as e:
